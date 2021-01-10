@@ -1,10 +1,11 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './routes';
+import { Navbar } from './components';
 
 function App() {
   return (
     <div className="App">
-      <h3> Welcome to Chirpper </h3>
+      <Navbar />
       <Router>
         <Routes />
       </Router>
