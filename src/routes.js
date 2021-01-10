@@ -1,14 +1,18 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { GlobalFeed, Article } from './views';
+import { 
+  GlobalFeed, 
+  Authentication, 
+  Register, 
+  Article, 
+} from './views';
 
 export default () => {
   return (
     <Switch>
-      <Route path='/' component={GlobalFeed} exact /> {/* 
-          exact нужен чтобы перекрыть дефолтное поведение роутеров, 
-          так как ищет и находит по первому совпадению - по /слэшу/ 
-        */}
+      <Route path='/' component={GlobalFeed} exact /> 
+      <Route path='/login' component={Authentication} />
+      <Route path='/register' component={Register} />
       <Route path='/articles/:slug' component={Article} />
     </Switch>
   )
