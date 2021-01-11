@@ -1,8 +1,17 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { EmailInput, PasswordInput } from '../components/inputs';
 import { Button } from '../components/buttons';
 
 export const Authentication = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('data', email, password);
+  };
+
   return (
     <div className="auth-page">
       <div className="container page">
@@ -12,10 +21,24 @@ export const Authentication = () => {
             <p className="text-xs-center">
               <Link to="/register">Need an account?</Link>
             </p>
-            <form>
+            <form onSubmit={handleSubmit}>
               <fieldset>
-                <EmailInput />
-                <PasswordInput />
+                <EmailInput
+                  inputContainerClass="form-group"
+                  inputClass="form-control form-control-lg"
+                  inputType="email"
+                  inputPlaceholder="Email"
+                  inputValue={email}
+                  onChange={e => setEmail(e.target.value)}
+                />
+                <PasswordInput 
+                  inputContainerClass="form-group"
+                  inputClass="form-control form-control-lg"
+                  inputType="password"
+                  inputPlaceholder="Password"
+                  inputValue={password}
+                  onChange={e => setPassword(e.target.value)}
+                />
               </fieldset>
               <Button 
                 buttonClass="btn btn-lg btn-primary pull-xs-right"
