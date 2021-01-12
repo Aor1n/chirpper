@@ -15,7 +15,7 @@ export const Authentication = (props) => {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false);
-  const [{isLoading, response, error}, doFetch] = useFetch(apiUrl);
+  const [{isLoading, response}, doFetch] = useFetch(apiUrl);
   const [token, setToken] = useLocalStorage('token');
 
   const currentPage = isLogin? 'Sign in' : 'Sign up';
@@ -23,7 +23,7 @@ export const Authentication = (props) => {
   const pageHelperLink = isLogin? '/register' : '/login';
 
   // console.log('isLoading/response/error', isLoading, response, error);
-  // console.log('token', token);
+  console.log('token', token);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,25 +41,11 @@ export const Authentication = (props) => {
     if (!response) return;
     setToken(response.user.token);
     setIsSuccessfullSubmit(true);
-  }, [response]);
+  }, [response, setToken]);
 
   if (isSuccessfullSubmit) {
     return <Redirect to="/" />;
   };
-  
-  // useEffect(() => {
-  //   console.log('effect was triggered');
-  //   document.title = email;
-  // }); // позволяет работать с sideeffect(все, что не относится к реакту)
-  //     // первый раз используется сразу после первого рендера
-  //     // также используется после всех последующих перерендеров!
-      
-  //   useEffect(() => {
-  //     console.log('effect was triggered, []');
-  //     document.title = email;
-  //   }, [email]) // позволяет создавать зависимости для изменения. Изменение произойдет только после того,
-  //          // как зависимости изменились
-  //          // ЕСЛИ массив остался пустым, то хук используется только после первого рендера!
 
   return (
     <div className="auth-page">
