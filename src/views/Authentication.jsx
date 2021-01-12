@@ -1,32 +1,38 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { EmailInput, PasswordInput } from '../components/inputs';
+import { EmailInput, PasswordInput, UsernameInput } from '../components/inputs';
 import { Button } from '../components/buttons';
 
 import useFetch from '../hooks/useFetch';
 
-export const Authentication = () => {
+export const Authentication = (props) => {
+  const isLogin = props.match.path === '/login';
+  const apiUrl = isLogin? '/users/login' : '/users'
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [{isLoading, response, error}, doFetch] = useFetch('/users/login');
+  const [username, setUsername] = useState('');
+  const [{isLoading, response, error}, doFetch] = useFetch(apiUrl);
 
-  console.log('fff', isLoading, response, error);
+  const currentPage = isLogin? 'Sign in' : 'Sign up';
+  const pageHelper = isLogin? 'Need an account?' : 'Have an account?';
+  const pageHelperLink = isLogin? '/register' : '/login';
+
+
+  console.log('fff', props);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('data', email, password);
+    const user = isLogin ? {email, password} : {email, password, username};
     doFetch({
       method: 'post',
       data: {
-        user: {
-          email: 'm@mail.ru',
-          password: '123s'
-        }
+        user
       }
     });
   };
-  // console.log(isLoading);
 
   
   // useEffect(() => {
@@ -48,12 +54,22 @@ export const Authentication = () => {
       <div className="container page">
         <div className="row">
           <div className="col-md-6 offset-md-3 col-xs-12">
-            <h2 className="text-xs-center">Login</h2>
+            <h2 className="text-xs-center"> {currentPage} </h2>
             <p className="text-xs-center">
-              <Link to="/register">Need an account?</Link>
+              <Link to={pageHelperLink}> {pageHelper} </Link>
             </p>
             <form onSubmit={handleSubmit}>
               <fieldset>
+                {!isLogin &&
+                <UsernameInput
+                  inputContainerClass="form-group"
+                  inputClass="form-control form-control-lg"
+                  inputType="text"
+                  inputPlaceholder="Username"
+                  inputValue={username}
+                  onChange={e => setUsername(e.target.value)}
+                />
+                }
                 <EmailInput
                   inputContainerClass="form-group"
                   inputClass="form-control form-control-lg"
@@ -75,7 +91,7 @@ export const Authentication = () => {
                 buttonClass="btn btn-lg btn-primary pull-xs-right"
                 buttonType="submit"
                 disabled={isLoading}
-                buttonName="Sign in"
+                buttonName={currentPage}
               />
             </form>
           </div>
