@@ -1,12 +1,22 @@
-import { Input } from '.';
+export const PasswordInput = ({
+  inputContainerClass,
+  inputClass,
+  inputType,
+  inputPlaceholder,
+  inputValue,
+  onChange,
+}) => {
+  
 
-export const PasswordInput = () => {
   return (
-    <Input 
-      inputContainerClass="form-group"
-      inputClass="form-control form-control-lg"
-      inputType="password"
-      inputPlaceholder="Password"
-    />
+    <div className={inputContainerClass}>
+      <input 
+        className={inputClass}
+        type={inputType}
+        placeholder={inputPlaceholder}
+        value={inputValue}
+        onChange={onChange}
+      />
+    </div>
   );
 };

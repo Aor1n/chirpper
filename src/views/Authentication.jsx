@@ -1,26 +1,97 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { EmailInput, PasswordInput } from '../components/inputs';
+
+import { EmailInput, PasswordInput, UsernameInput } from '../components/inputs';
 import { Button } from '../components/buttons';
 
-export const Authentication = () => {
+import useFetch from '../hooks/useFetch';
+
+export const Authentication = (props) => {
+  const isLogin = props.match.path === '/login';
+  const apiUrl = isLogin? '/users/login' : '/users'
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [{isLoading, response, error}, doFetch] = useFetch(apiUrl);
+
+  const currentPage = isLogin? 'Sign in' : 'Sign up';
+  const pageHelper = isLogin? 'Need an account?' : 'Have an account?';
+  const pageHelperLink = isLogin? '/register' : '/login';
+
+
+  console.log('fff', props);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('data', email, password);
+    const user = isLogin ? {email, password} : {email, password, username};
+    doFetch({
+      method: 'post',
+      data: {
+        user
+      }
+    });
+  };
+
+  
+  // useEffect(() => {
+  //   console.log('effect was triggered');
+  //   document.title = email;
+  // }); // позволяет работать с sideeffect(все, что не относится к реакту)
+  //     // первый раз используется сразу после первого рендера
+  //     // также используется после всех последующих перерендеров!
+      
+  //   useEffect(() => {
+  //     console.log('effect was triggered, []');
+  //     document.title = email;
+  //   }, [email]) // позволяет создавать зависимости для изменения. Изменение произойдет только после того,
+  //          // как зависимости изменились
+  //          // ЕСЛИ массив остался пустым, то хук используется только после первого рендера!
+
   return (
     <div className="auth-page">
       <div className="container page">
         <div className="row">
           <div className="col-md-6 offset-md-3 col-xs-12">
-            <h2 className="text-xs-center">Login</h2>
+            <h2 className="text-xs-center"> {currentPage} </h2>
             <p className="text-xs-center">
-              <Link to="/register">Need an account?</Link>
+              <Link to={pageHelperLink}> {pageHelper} </Link>
             </p>
-            <form>
+            <form onSubmit={handleSubmit}>
               <fieldset>
-                <EmailInput />
-                <PasswordInput />
+                {!isLogin &&
+                <UsernameInput
+                  inputContainerClass="form-group"
+                  inputClass="form-control form-control-lg"
+                  inputType="text"
+                  inputPlaceholder="Username"
+                  inputValue={username}
+                  onChange={e => setUsername(e.target.value)}
+                />
+                }
+                <EmailInput
+                  inputContainerClass="form-group"
+                  inputClass="form-control form-control-lg"
+                  inputType="email"
+                  inputPlaceholder="Email"
+                  inputValue={email}
+                  onChange={e => setEmail(e.target.value)}
+                />
+                <PasswordInput 
+                  inputContainerClass="form-group"
+                  inputClass="form-control form-control-lg"
+                  inputType="password"
+                  inputPlaceholder="Password"
+                  inputValue={password}
+                  onChange={e => setPassword(e.target.value)}
+                />
               </fieldset>
               <Button 
                 buttonClass="btn btn-lg btn-primary pull-xs-right"
                 buttonType="submit"
-                buttonName="Sign in"
+                disabled={isLoading}
+                buttonName={currentPage}
               />
             </form>
           </div>

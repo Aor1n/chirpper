@@ -1,12 +1,22 @@
-import { Input } from '../inputs';
+export const EmailInput = ({
+  inputContainerClass,
+  inputClass,
+  inputType,
+  inputPlaceholder,
+  inputValue,
+  onChange,
+}) => {
+  
 
-export const EmailInput = () => {
   return (
-    <Input 
-      inputContainerClass="form-group"
-      inputClass="form-control form-control-lg"
-      inputType="email"
-      inputPlaceholder="Email"
-    />
+    <div className={inputContainerClass}>
+      <input 
+        className={inputClass}
+        type={inputType}
+        placeholder={inputPlaceholder}
+        value={inputValue}
+        onChange={onChange}
+      />
+    </div>
   );
 };

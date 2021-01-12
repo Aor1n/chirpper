@@ -1,8 +1,12 @@
-export const Input = ({
+export const UsernameInput = ({
   inputContainerClass,
   inputClass,
   inputType,
-  inputPlaceholder}) => {
+  inputPlaceholder,
+  inputValue,
+  onChange,
+}) => {
+  
 
   return (
     <div className={inputContainerClass}>
@@ -10,6 +14,8 @@ export const Input = ({
         className={inputClass}
         type={inputType}
         placeholder={inputPlaceholder}
+        value={inputValue}
+        onChange={onChange}
       />
     </div>
   );
