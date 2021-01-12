@@ -1,24 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 import { EmailInput, PasswordInput } from '../components/inputs';
 import { Button } from '../components/buttons';
-import axios from 'axios';
+
+import useFetch from '../hooks/useFetch';
 
 export const Authentication = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [{isLoading, response, error}, doFetch] = useFetch('/users/login');
+
+  console.log('fff', isLoading, response, error);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-  };
-  console.log(isSubmitting)
-
-  useEffect(() => {
-    if (!isSubmitting) return;
-
-    axios('https://conduit.productionready.io/api/users/login', {
+    console.log('data', email, password);
+    doFetch({
       method: 'post',
       data: {
         user: {
@@ -26,16 +24,24 @@ export const Authentication = () => {
           password: '123s'
         }
       }
-    })
-    .then(res => {
-      console.log('response', res);
-      setIsSubmitting(false);
-    })
-    .catch(err => {
-      console.error('error', err);
-      setIsSubmitting(false);
-    })
-  });
+    });
+  };
+  // console.log(isLoading);
+
+  
+  // useEffect(() => {
+  //   console.log('effect was triggered');
+  //   document.title = email;
+  // }); // позволяет работать с sideeffect(все, что не относится к реакту)
+  //     // первый раз используется сразу после первого рендера
+  //     // также используется после всех последующих перерендеров!
+      
+  //   useEffect(() => {
+  //     console.log('effect was triggered, []');
+  //     document.title = email;
+  //   }, [email]) // позволяет создавать зависимости для изменения. Изменение произойдет только после того,
+  //          // как зависимости изменились
+  //          // ЕСЛИ массив остался пустым, то хук используется только после первого рендера!
 
   return (
     <div className="auth-page">
@@ -68,7 +74,7 @@ export const Authentication = () => {
               <Button 
                 buttonClass="btn btn-lg btn-primary pull-xs-right"
                 buttonType="submit"
-                disabled={isSubmitting}
+                disabled={isLoading}
                 buttonName="Sign in"
               />
             </form>
