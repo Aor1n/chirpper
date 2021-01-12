@@ -1,26 +1,29 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 
 import { EmailInput, PasswordInput, UsernameInput } from '../components/inputs';
 import { Button } from '../components/buttons';
 
 import useFetch from '../hooks/useFetch';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 export const Authentication = (props) => {
   const isLogin = props.match.path === '/login';
-  const apiUrl = isLogin? '/users/login' : '/users'
-  
+  const apiUrl = isLogin? '/users/login' : '/users';
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false);
   const [{isLoading, response, error}, doFetch] = useFetch(apiUrl);
+  const [token, setToken] = useLocalStorage('token');
 
   const currentPage = isLogin? 'Sign in' : 'Sign up';
   const pageHelper = isLogin? 'Need an account?' : 'Have an account?';
   const pageHelperLink = isLogin? '/register' : '/login';
 
-
-  console.log('fff', props);
+  // console.log('isLoading/response/error', isLoading, response, error);
+  // console.log('token', token);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,6 +37,15 @@ export const Authentication = (props) => {
     });
   };
 
+  useEffect(() => {
+    if (!response) return;
+    setToken(response.user.token);
+    setIsSuccessfullSubmit(true);
+  }, [response]);
+
+  if (isSuccessfullSubmit) {
+    return <Redirect to="/" />;
+  };
   
   // useEffect(() => {
   //   console.log('effect was triggered');
